@@ -1,0 +1,5 @@
+file = open('config.txt', 'w')
+file.write('0')
+file.write('0')
+file.write('0')
+file.close()

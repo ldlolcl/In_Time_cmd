@@ -5,14 +5,47 @@ import colorama
 from colorama import Fore
 colorama.init()
 
+try:
+	file = open('config.txt', 'r')
+	r = file.readlines()
+	year, month, day = r[0][:10].split('-')
+	data_DMB = datetime.date(int(year), int(month), int(day))
+	year, month, day = r[1][:10].split('-')
+	data_dolga = datetime.date(int(year), int(month), int(day))
+	dolg_na_daty = int(r[2][:-1])
+	file.close()
+except (FileNotFoundError, ValueError, IndexError):
+	file = open('config.txt', 'w')
+	day, month, year = input('Введите конечную дату в формате ДД.ММ.ГГГГ: ').split('.')
+	a = datetime.date(int(year), int(month), int(day))
+	day, month, year = input('Введите дату на которую известна сумма долга в формате ДД.ММ.ГГГГ: ').split('.')
+	b = datetime.date(int(year), int(month), int(day))
+	c = int(input('Введите сумму долга на вышеуказанную дату в BYN: '))
+	file.write(str(a)+'\n')
+	file.write(str(b)+'\n')
+	file.write(str(c)+'\n')
+	file.close()
+	file = open('config.txt', 'r')
+	r = file.readlines()
+	year, month, day = r[0][:10].split('-')
+	data_DMB = datetime.date(int(year), int(month), int(day))
+	year, month, day = r[1][:10].split('-')
+	data_dolga = datetime.date(int(year), int(month), int(day))
+	dolg_na_daty = int(r[2][:-1])
+	file.close()
+
+#data_DMB = datetime.date(2024, 7, 31)
+#data_dolga = datetime.date(2021, 10, 15)
+#dolg_na_daty = 32214
+
 def Dolg():
-	nachalo = datetime.date(2021, 10, 15)
+	nachalo = data_dolga
 	t_data = datetime.date.today()
-	d_kontrakt = datetime.date(2024, 7, 31)
+	d_kontrakt = data_DMB
 	d_proshlo = int((str((nachalo - t_data) * -1).split()[0]))
 	d_vsego = int(str(d_kontrakt - nachalo).split()[0])
 	d_ostalos = d_vsego - d_proshlo
-	dolg_1 = 32214
+	dolg_1 = dolg_na_daty
 	dolg_2 = round(dolg_1 / d_vsego * d_ostalos)
 	dolg_3 = str(dolg_2)[::-1]
 	dolg_4 = ('.'.join(dolg_3[i:i+3] for i in range(0, len(dolg_3), 3))[::-1])
@@ -22,7 +55,7 @@ def Time():
 	os.system('cls' if os.name == 'nt' else 'clear')
 	dt  = datetime.datetime
 	start_date = dt.today()
-	end_date = dt(year=2024,month=7,day=31)
+	end_date = dt(year=int(data_DMB.strftime('%Y')),month=int(data_DMB.strftime('%m')),day=int(data_DMB.strftime('%d')))
 	timer = end_date - start_date
 	now = dt.now()
 	timer2 = str(end_date - datetime.datetime(year=now.year, month=now.month, day=now.day, hour=now.hour, minute=now.minute))
@@ -63,7 +96,6 @@ def Time():
 		seconds2 = str(seconds)
 	dolgi = Dolg()
 	print(Fore.LIGHTGREEN_EX + dolgi, ' BYN', o, years2, o, months2, o, days2, o, hours2, o, minutes2, o, seconds2, sep='')
-	#return (Fore.LIGHTGREEN_EX + dolgi, '$', o, years2, o, months2, o, days2, o, hours2, o, minutes2, o, seconds2)
 	time.sleep(1)
 
 def Start():
